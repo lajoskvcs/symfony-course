@@ -2,6 +2,8 @@
 
 namespace Blog\CoreBundle\Controller;
 
+use Blog\CoreBundle\Services\PostManager;
+use Blog\ModelBundle\Entity\Comment;
 use Blog\ModelBundle\Form\CommentType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -12,6 +14,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class PostController
+ *
+ * @Route("/{_locale}", requirements={"_locale"="en|es"}, defaults={"_locale"="en"})
  */
 class PostController extends Controller
 {
@@ -25,8 +29,8 @@ class PostController extends Controller
      */
     public function indexAction()
     {
-        $posts = $this->getDoctrine()->getRepository('ModelBundle:Post')->findAll();
-        $latestPosts = $this->getDoctrine()->getRepository('ModelBundle:Post')->findLatest(5);
+        $posts = $this->getPostManager()->findAll();
+        $latestPosts = $this->getPostManager()->findLatest(5);
 
         return array(
             'posts' => $posts,
@@ -39,7 +43,6 @@ class PostController extends Controller
      *
      * @param string $slug
      *
-     * @throws NotFoundHttpException
      * @return array
      *
      * @Route("/{slug}")
@@ -47,16 +50,7 @@ class PostController extends Controller
      */
     public function showAction($slug)
     {
-        $post = $this->getDoctrine()->getRepository('ModelBundle:Post')->findOneBy(
-            array(
-                'slug' => $slug,
-            )
-        );
-
-        if (null === $post) {
-            throw $this->createNotFoundException('Post was not found');
-        }
-
+        $post = $this->getPostManager()->findBySlug($slug);
         $form = $this->createForm(new CommentType());
 
         return array(
@@ -79,6 +73,28 @@ class PostController extends Controller
      */
     public function createCommentAction(Request $request, $slug)
     {
-        return array();
+        $post = $this->getPostManager()->findBySlug($slug);
+        $form = $this->getPostManager()->createComment($post, $request);
+
+        if (true === $form) {
+            $this->get('session')->getFlashBag()->add('success', 'Your comment was submitted successfully');
+
+            return $this->redirect($this->generateUrl('blog_core_post_show', array('slug' => $post->getSlug())));
+        }
+
+        return array(
+            'post' => $post,
+            'form' => $form->createView(),
+        );
+    }
+
+    /**
+     * Get Post manager
+     *
+     * @return PostManager
+     */
+    private function getPostManager()
+    {
+        return $this->get('postManager');
     }
 }

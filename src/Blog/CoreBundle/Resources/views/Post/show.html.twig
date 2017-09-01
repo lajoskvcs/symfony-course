@@ -1,6 +1,6 @@
 {% extends "CoreBundle::layout.html.twig" %}
 
-{% block title %}{{ post.title }}{% endblock %}
+{% block title %}{{ post.title | decorate }}{% endblock %}
 
 {% block sidebar %}
     <aside>

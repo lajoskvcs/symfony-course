@@ -1,0 +1,36 @@
+{% extends 'AdminBundle::layout.html.twig' %}
+
+{% block title %}Tag list{% endblock %}
+
+{% block section %}
+    <h1>Post list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for tag in tags %}
+            <tr>
+                <td>{{ tag.name }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('blog_admin_tag_edit', { 'id': tag.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('blog_admin_tag_new') }}">Create a new entry</a>
+        </li>
+    </ul>
+{% endblock %}

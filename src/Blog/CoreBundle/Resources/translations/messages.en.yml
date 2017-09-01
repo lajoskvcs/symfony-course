@@ -14,6 +14,10 @@ post:
   by.author: Posts by %name%
   comments: '{0} No comments|{1} %count% comment|]1,Inf] %count% comments'
 
+tag:
+  plural: Tags
+  all: Tags with at least one Post
+
 comment:
   singular: Comment
   plural: Comments

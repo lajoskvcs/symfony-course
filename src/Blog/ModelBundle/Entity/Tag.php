@@ -2,6 +2,7 @@
 
 namespace Blog\ModelBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -32,11 +33,15 @@ class Tag
     /**
      * @var Post
      *
-     * @ORM\ManyToOne(targetEntity="Post", inversedBy="tags")
-     * @ORM\JoinColumn(name="post_id", referencedColumnName="id", nullable=false)
-     * @Assert\NotBlank
+     * @ORM\ManyToMany(targetEntity="Post", mappedBy="tags")
      */
-    private $post;
+    private $posts;
+
+
+    public function __construct()
+    {
+        $this->posts = new ArrayCollection();
+    }
 
 
     /**
@@ -72,26 +77,26 @@ class Tag
         return $this->name;
     }
 
-    /**
-     * Set post
-     *
-     * @param \Blog\ModelBundle\Entity\Post $post
-     * @return Tag
-     */
-    public function setPost(\Blog\ModelBundle\Entity\Post $post)
+    public function addPost(Post $post)
     {
-        $this->post = $post;
+        $this->posts[] = $post;
 
         return $this;
     }
 
-    /**
-     * Get post
-     *
-     * @return \Blog\ModelBundle\Entity\Post 
-     */
-    public function getPost()
+
+    public function removePost(Post $post)
     {
-        return $this->post;
+        $this->posts->removeElement($post);
+    }
+
+
+    public function getPosts()
+    {
+        return $this->posts;
+    }
+
+    public function __toString() {
+        return $this->name;
     }
 }

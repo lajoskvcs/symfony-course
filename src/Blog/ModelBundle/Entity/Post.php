@@ -64,6 +64,14 @@ class Post extends Timestampable
      */
     private $comments;
 
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Tag", inversedBy="posts")
+     * @ORM\JoinTable(name="posts_tags")
+     */
+    private $tags;
+
 
     /**
      * Constructor
@@ -71,6 +79,7 @@ class Post extends Timestampable
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+        $this->tags = new ArrayCollection();
     }
 
     /**
@@ -209,5 +218,24 @@ class Post extends Timestampable
     public function getComments()
     {
         return $this->comments;
+    }
+
+    public function addTag(Tag $tag)
+    {
+        $this->tag[] = $tag;
+
+        return $this;
+    }
+
+
+    public function removeTag(Tag $tag)
+    {
+        $this->tags->removeElement($tag);
+    }
+
+
+    public function getTags()
+    {
+        return $this->tags;
     }
 }

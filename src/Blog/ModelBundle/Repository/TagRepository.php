@@ -12,4 +12,30 @@ use Doctrine\ORM\EntityRepository;
  */
 class TagRepository extends EntityRepository
 {
+    /**
+     * Find latest
+     *
+     *
+     * @return array
+     */
+    public function findAllWithPost()
+    {
+        $qb = $this->getQueryBuilder()
+            ->select('t')
+            ->from('ModelBundle:Tag','t')
+            ->leftJoin('t.posts','p')
+            ->having('COUNT(p.id) != 0')
+            ->groupBy('t.id');
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function findById($id) {
+        return $this->findBy(array("id" => $id));
+    }
+
+    private function getQueryBuilder()
+    {
+        return $this->createQueryBuilder('ta');
+    }
 }

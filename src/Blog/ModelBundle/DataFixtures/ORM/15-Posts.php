@@ -41,6 +41,7 @@ metus, eu laoreet enim. Curabitur sollicitudin elit a sodales porttitor. Donec f
 habitasse platea dictumst. Cras ut consequat ipsum. Donec faucibus ac arcu ut rutrum.');
         $p1->setAuthor($this->getAuthor($manager, 'David'));
 
+
         $p2 = new Post();
         $p2->setTitle('Donec in turpis ac dolor tempor egestas nec ac tortor');
         $p2->setBody('Donec in turpis ac dolor tempor egestas nec ac tortor. Suspendisse facilisis ipsum id neque
